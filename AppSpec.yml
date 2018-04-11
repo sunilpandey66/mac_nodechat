@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: nodechat/
+  - source: /
     destination: /var/www/html/Nodechat
 hooks:
   BeforeInstall:
