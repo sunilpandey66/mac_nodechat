@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: nodechat/
+    destination: /var/www/html/Nodechat
+hooks:
+  BeforeInstall:
+    - location: package.json
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: server/server.js
+      timeout: 300
+      runas: root
