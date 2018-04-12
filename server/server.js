@@ -15,7 +15,7 @@ app.use(express.static(publicpath));
 
 io.on('connection', (socket) => {
   console.log('New user connected');
-
+/*Initial message sent to client*/
   socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
@@ -25,22 +25,6 @@ io.on('connection', (socket) => {
           console.log('createMessage', message);
           io.emit('newMessage',generateMessage(message.from,message.text))
           callback('this is from the server');
-
-          /*
-          io.emit('newMessage',{
-          from : message.from,
-          text : message.text,
-          createdAt : new Date().getTime()
-        });
-
-        socket.broadcast.emit('newMessage',{
-          from : message.from,
-          text : message.text,
-          createdAt : new Date().getTime()
-        });
-        */
-
-
       })
 
 
