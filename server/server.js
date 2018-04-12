@@ -2,11 +2,10 @@ const path =require('path');
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
+const {generateMessage} = require('./utils/message.js')
 
 const publicpath = path.join(__dirname + '/../public');
 const port = process.env.PORT || 3001;
-
-
 console.log(publicpath);
 var app = express();
 var server = http.createServer(app);
@@ -17,23 +16,41 @@ app.use(express.static(publicpath));
 io.on('connection', (socket) => {
   console.log('New user connected');
 
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
- socket.emit('newMessage', {
-   from: 'Barcode44',
-   text: 'Hi I am in the chatroom !!',
-   Date:  '15:15:20'
 
- });
+/*function to listen to messgaes from browser*/
+      socket.on('createMessage',function(message,callback){
+          console.log('createMessage', message);
+          io.emit('newMessage',generateMessage(message.from,message.text))
+          callback('this is from the server');
 
-socket.on('createMessage',function(newEmail){
-  console.log('createMessage', newEmail);
-})
+          /*
+          io.emit('newMessage',{
+          from : message.from,
+          text : message.text,
+          createdAt : new Date().getTime()
+        });
 
-  socket.on('disconnect', () => {
-    console.log('User was disconnected');
+        socket.broadcast.emit('newMessage',{
+          from : message.from,
+          text : message.text,
+          createdAt : new Date().getTime()
+        });
+        */
+
+
+      })
+
+
+
+/*function to do something when disconnect*/
+      socket.on('disconnect', () => {
+      console.log('User was disconnected');
   });
 });
-
-server.listen(port, () => {
+/*server in listen mode*/
+  server.listen(port, () => {
   console.log(`Server is up on port ${port}`);
 });
