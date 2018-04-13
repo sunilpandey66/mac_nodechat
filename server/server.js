@@ -2,7 +2,7 @@ const path =require('path');
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
-const {generateMessage} = require('./utils/message.js')
+const {generateMessage,generateLocationMessage} = require('./utils/message.js')
 
 const publicpath = path.join(__dirname + '/../public');
 const port = process.env.PORT || 3001;
@@ -25,8 +25,13 @@ io.on('connection', (socket) => {
           console.log('createMessage', message);
           io.emit('newMessage',generateMessage(message.from,message.text))
           callback('this is from the server');
-      })
+      });
 
+/*for Geolocation listening from the client*/
+    socket.on('createLocationMessage',function(coords){
+      console.log('createLocationMessage', coords);
+      io.emit('newLocationMessage',generateLocationMessage('Admin', coords.latitude, coords.longitude))
+      });
 
 
 /*function to do something when disconnect*/
